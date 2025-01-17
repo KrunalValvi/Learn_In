@@ -13,7 +13,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 
+// Define the dark color scheme
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryMain,
     secondary = SecondaryMain,
@@ -29,6 +31,7 @@ private val DarkColorScheme = darkColorScheme(
     onError = WhiteHighEmp
 )
 
+// Define the light color scheme
 private val LightColorScheme = lightColorScheme(
     primary = PrimaryMain,
     secondary = SecondaryMain,
@@ -36,21 +39,21 @@ private val LightColorScheme = lightColorScheme(
     background = WhiteHighEmp,
     surface = WhiteLowEmp,
     error = Error,
-    onPrimary = WhiteHighEmp,
-    onSecondary = WhiteHighEmp,
-    onTertiary = WhiteHighEmp,
+    onPrimary = BlackHighEmp,
+    onSecondary = BlackHighEmp,
+    onTertiary = BlackHighEmp,
     onBackground = BlackHighEmp,
     onSurface = BlackHighEmp,
-    onError = WhiteHighEmp
+    onError = BlackHighEmp
 )
 
 @Composable
 fun LearnInTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    darkTheme: Boolean = isSystemInDarkTheme(), // Automatically detect dark mode
+    dynamicColor: Boolean = true, // Use dynamic colors on Android 12+ (optional)
     content: @Composable () -> Unit
 ) {
+    // Select the color scheme based on conditions
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -60,17 +63,20 @@ fun LearnInTheme(
         else -> LightColorScheme
     }
 
+    // Update system bars (status bar color)
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
+    // Apply the custom typography and color scheme to MaterialTheme
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = Typography, // Use your custom Typography defined in `type.kt`
         content = content
     )
 }

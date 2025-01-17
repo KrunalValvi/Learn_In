@@ -1,62 +1,60 @@
 package com.example.learnin.ui.onboarding.screens
 
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import kotlinx.coroutines.delay
+import com.example.learnin.R
 
-// Function to create a Card with elevation
 @Composable
-fun ElevationCard(title: String, elevation: Dp, modifier: Modifier = Modifier) {
-    Card(
-        elevation = CardDefaults.cardElevation(elevation),
-        modifier = modifier.size(100.dp)
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Text(
-                text = title,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(8.dp)
-            )
+fun SplashScreen(navController: NavController) {
+
+    LaunchedEffect(Unit) {
+        delay(2000) // Changed `kotlinx.coroutines.delay` to `delay`
+        navController.navigate("onboarding") {
+            popUpTo("splash") { inclusive = true }
         }
     }
-}
 
-// Function to create a row of elevation cards
-@Composable
-fun ElevationRow(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFF335EEA),
+                        Color(0xFF9545ED)
+                    )
+                )
+            )
     ) {
-        ElevationCard("Elevation - 1", elevation = 2.dp)
-        ElevationCard("Elevation - 2", elevation = 4.dp)
-        ElevationCard("Elevation - 3", elevation = 8.dp)
-        ElevationCard("Elevation - 4", elevation = 16.dp)
-    }
-}
-
-// Function to create a complete Elevation demo
-@Composable
-fun ElevationDemo(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text("Elevation_ Drop Shadow", style = MaterialTheme.typography.titleMedium)
-        ElevationRow()
+        Image(
+            painter = painterResource(id = R.drawable.app_logo),
+            contentDescription = "Logo",
+            modifier = Modifier
+                .size(200.dp)
+                .align(Alignment.Center)
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun TestTypographyPreview() {
-    ElevationDemo()
+fun SplashScreenPreview() {
+    // You can't preview `SplashScreen` directly as it requires NavController, so preview a simpler component.
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Placeholder preview
+    }
 }
